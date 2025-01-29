@@ -6,6 +6,11 @@ from playsound import playsound
 import json
 import os
 
+start_icon = Image.open('recipe photos/start.png')
+stop_icon = Image.open('recipe photos/stop.png')
+start_ctk = CTkImage(light_image=start_icon,dark_image=start_icon,size=(25,25))
+stop_ctk = CTkImage(light_image=stop_icon,dark_image=stop_icon,size=(25,25))
+
 running = True
 time_displayed = None
 duration_entered = None
@@ -178,7 +183,7 @@ def add_recipe():
             steps_list[i][2].place(x=410, y=y-5)  # Update timer button position
 
     def add_timer():
-        global duration_entry, y_tmr, add_btn, running, time_displayed, duration_entered, timer_count
+        global duration_entry, y_tmr, add_btn, running, time_displayed, duration_entered, timer_count, start_ctk, stop_ctk
         timer_count += 1
         if timer_count < 8:
             timer_durations.append(duration_entry.get())
@@ -212,17 +217,19 @@ def add_recipe():
                 timers_frame,
                 width=30,
                 command=start_timer,  # Start countdown
-                text="Start",
-                fg_color='green',
-                text_color='black'
+                text="",
+                fg_color='transparent',
+                text_color='black',
+                image = start_ctk
             )
             stop_btn = CTkButton(
                 timers_frame,
                 width=30,
                 command=stop_timer,  # Stop action
-                text='Pause',
-                fg_color='red',
-                text_color='black'
+                text='',
+                fg_color='transparent',
+                text_color='black',
+                image= stop_ctk
             )
             delete_btn = CTkButton(
                 timers_frame,
@@ -286,7 +293,10 @@ def add_recipe():
             except _tkinter.TclError:
                 pass
             timers_frame.after(1000, countdown, duration - 1, duration_label)  # Schedule next update
-            duration_entered-=1
+            try:
+                duration_entered-=1
+            except TypeError:
+                pass
         elif duration == 0:
             duration_label.configure(text="Time's up!")  # Display when finished
             playsound('C:/Users/Lenovo/PycharmProjects/pythonProject/External Projects/wav/Alarm.wav')
@@ -435,17 +445,18 @@ def saved_recipes():
                 new_timers_frame,
                 width=30,
                 command=start_timer,  # Start countdown
-                text="Start",
-                fg_color='green',
-                text_color='black'
+                text="",
+                fg_color='transparent',
+                text_color='black',
+                image= start_ctk
             )
             stop_btn = CTkButton(
                 new_timers_frame,
                 width=30,
                 command=stop_timer,  # Stop action
-                text='Pause',
-                fg_color='red',
-                text_color='black'
+                fg_color='transparent',
+                text_color='black',
+                image= stop_ctk
             )
             for timer in timers:
                 duration_label = CTkLabel(new_timers_frame, text=f"{timer}:00", font=('arial', 20))
